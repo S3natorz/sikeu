@@ -20,11 +20,6 @@ class PembayaranMhsBaru extends Model
         return $this->hasOne(Semester::class, 'id', 'semester_id');
     }
 
-    // public function gelombang()
-    // {
-    //     return $this->hasOne(Gelombang::class, 'id', 'gelombang_id');
-    // }
-
     public function tingkat()
     {
         return $this->hasOne(Tingkat::class, 'id', 'tingkat_id');
@@ -37,7 +32,7 @@ class PembayaranMhsBaru extends Model
 
     public function konsentrasi()
     {
-        return $this->hasOne(Konsentrasi::class, 'id', 'konsentrasi_id');
+        return $this->hasOne(Konsentrasi::class, 'id_konsentrasi', 'konsentrasi_id');
     }
 
 }

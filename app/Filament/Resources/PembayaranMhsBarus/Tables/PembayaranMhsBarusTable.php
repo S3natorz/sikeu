@@ -215,21 +215,30 @@ class PembayaranMhsBarusTable
 
             foreach ($items as $item) {
                 $tahunAkademikId = $tahunAkademikMap[$item->thn_akademik] ?? null;
-
-                if ($tahunAkademikId && $item->thn_akademik_id !== $tahunAkademikId) {
-                    $updates[] = [
-                        'id'              => $item->id,
-                        'thn_akademik_id' => $tahunAkademikId
-                    ];
+                $data['id']      = $item->id;
+                if ($tahunAkademikId) {
+                    $data['thn_akademik_id'] = $tahunAkademikId;
                 }
 
                 $prodiId = $prodiMap->where('tingkat', $item->tingkat)->where('id_prodi', $item->prodi)->first()->id ?? null;
 
-                if ($prodiId && $item->prodi_id !== $prodiId) {
-                    $updates[] = [
-                        'id'       => $item->id,
-                        'prodi_id' => $prodiId
-                    ];
+                if ($prodiId) {
+                    $data['prodi_id'] = $prodiId;
+                }
+
+                $semesterValue = $item->semester;
+                if ($semesterValue !== null) {
+                    $data['semester'] = $semesterValue;
+                }
+
+                // Update konsentrasi_id if possible
+                $konsentrasiId = $item->konsentrasi;
+                if ($konsentrasiId) {
+                    $data['konsentrasi_id'] = $konsentrasiId;
+                }
+
+                if (isset($data)) {
+                    $updates[] = $data;
                 }
             }
 
@@ -237,7 +246,12 @@ class PembayaranMhsBarusTable
             if (!empty($updates)) {
                 foreach ($updates as $update) {
                     PembayaranMhsBaru::where('id', $update['id'])
-                        ->update(['thn_akademik_id' => $update['thn_akademik_id']]);
+                        ->update([
+                            'thn_akademik_id' => $update['thn_akademik_id'],
+                            'prodi_id'        => $update['prodi_id'],
+                            'semester'        => $update['semester'] ?? null,
+                            'konsentrasi_id'  => $update['konsentrasi_id'] ?? null,
+                        ]);
                 }
             }
         });

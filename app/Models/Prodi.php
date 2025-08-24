@@ -9,4 +9,9 @@ class Prodi extends Model
     protected $table = 'prodi';
 
     protected $guarded = ['id'];
+
+    public function tingkat()
+    {
+        return $this->belongsTo(Tingkat::class);
+    }
 }
